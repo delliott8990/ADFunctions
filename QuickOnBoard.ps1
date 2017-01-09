@@ -1,5 +1,5 @@
 ﻿import-module activedirectory
-Function Move-OU {
+Function loadGUI {
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
 
@@ -49,15 +49,9 @@ $objForm.Add_KeyDown({if ($_.KeyCode -eq "Enter")
         }
     
     }
-    $TARGETOU = Get-ADOrganizationalUnit -Identity $OU
-    Get-ADComputer $x | Move-ADObject -TargetPath $TARGETOU.DistinguishedName
-    write-host 'Moved to OU'
-    $desc=$descTB.Text;
-    Set-ADComputer $x -Description $desc
-    write-host 'AD Description Updated'
-    $objForm.Close()   
-        }})
-$objForm.Add_KeyDown({if ($_.KeyCode -eq "Escape") 
+    
+    $objForm.Close()}})
+    $objForm.Add_KeyDown({if ($_.KeyCode -eq "Escape") 
     {$objForm.Close()}})
 
 $OKButton = New-Object System.Windows.Forms.Button
@@ -137,5 +131,15 @@ $objForm.Add_Shown({$objForm.Activate()})
 $objForm.Close()
 }
 
-Move-OU
+function updateADInfo{
+    $TARGETOU = Get-ADOrganizationalUnit -Identity $OU
+    Get-ADComputer $x | Move-ADObject -TargetPath $TARGETOU.DistinguishedName
+    write-host 'Moved to OU'
+    $desc=$descTB.Text;
+    Set-ADComputer $x -Description $desc
+    write-host 'AD Description Updated'
+}
+
+loadGUI
+updateADInfo
 
